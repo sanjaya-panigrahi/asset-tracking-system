@@ -1,0 +1,126 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+// Shipper can access all Shipment
+rule ShipperAccessOnlyHisShipment {
+    description: "Allow Exporter to access only his properties"
+    participant (p): "org.asset.tracking.solution.Shipper"
+    operation: ALL
+    resource (r): "org.asset.tracking.solution.Shipment"
+    condition: (r.contract.shipper.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+// Shipper can access all Contract
+rule ShipperAccessOnlyHisContract {
+    description: "Allow Exporter to access only his properties"
+    participant (p): "org.asset.tracking.solution.Shipper"
+    operation: ALL
+    resource (r): "org.asset.tracking.solution.Contract"
+    condition: (r.shipper.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+// Importer can access all Shipment
+rule ImporterAccessOnlyHisShipment {
+    description: "Allow Exporter to access only his properties"
+    participant (p): "org.asset.tracking.solution.Importer"
+    operation: ALL
+    resource (r): "org.asset.tracking.solution.Shipment"
+    condition: (r.contract.importer.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+// Importer can access all Contract
+rule ImporterAccessOnlyHisContract {
+    description: "Allow Exporter to access only his properties"
+    participant (p): "org.asset.tracking.solution.Importer"
+    operation: ALL
+    resource (r): "org.asset.tracking.solution.Contract"
+    condition: (r.importer.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+// Exporter can access all Shipment
+rule ExporterAccessOnlyHisShipment {
+    description: "Allow Exporter to access only his properties"
+    participant (p): "org.asset.tracking.solution.Exporter"
+    operation: ALL
+    resource (r): "org.asset.tracking.solution.Shipment"
+    condition: (r.contract.exporter.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+// Exporter can access all Contract
+rule ExporterAccessOnlyHisContract {
+    description: "Allow Exporter to access only his properties"
+    participant (p): "org.asset.tracking.solution.Exporter"
+    operation: ALL
+    resource (r): "org.asset.tracking.solution.Contract"
+    condition: (r.exporter.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+// Deny Users View Rights Of all shipments
+rule UserDenyAllShipmentViewRights {
+    description: "Deny all view rights to users"
+    participant: "org.asset.tracking.solution.**"
+    operation: READ
+    resource: "org.asset.tracking.solution.Shipment"
+    action: DENY
+}
+
+// Deny Users View Rights Of all Contract
+rule UserDenyAllContractViewRights {
+    description: "Deny all view rights to users"
+    participant: "org.asset.tracking.solution.**"
+    operation: READ
+    resource: "org.asset.tracking.solution.Contract"
+    action: DENY
+}
+
+// User can run all transactions
+rule UserRunAllTransactions {
+    description: "Allow all participants access to all resources"
+    participant: "ANY"
+    operation: ALL
+    resource: "org.asset.tracking.solution.*"
+    action: ALLOW
+}
+
+// Participants Can View Composer System
+rule ParticipantSystemAccess {
+    description: "Grant new Perticipant access to composer system"
+    participant: "org.hyperledger.composer.system.Participant"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}

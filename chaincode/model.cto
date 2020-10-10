@@ -1,0 +1,162 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace org.asset.tracking.solution
+
+// Define Exporter
+participant Exporter identified by exporterId {
+  o String exporterId
+  o String exporterEmail
+  o String exporterAddress
+  o Double exporterAcctBalc
+}
+
+//Define Shipper
+participant Shipper identified by shipperId {
+  o String shipperId
+  o String shipperEmail
+  o String shipperAddress
+  o Double shipperAcctBalc
+}
+
+//Define Importer
+participant Importer identified by importerId {
+  o String importerId
+  o String importerEmail
+  o String importerAddress
+  o Double importerAcctBalc
+}
+
+//Define AssetType for the type of Assets
+enum AssetType {
+  o Medical
+  o Medicine
+  o Fuel
+  o Trucks
+  o Wires
+  o Tables
+  o Laptops
+  o Chairs
+}
+
+// Define ShipmentStatus
+enum ShipmentStatus{
+  o Created
+  o InTransit
+  o Arrived
+}
+
+// Define CompassDirection
+enum CompassDirection{
+  o N
+  o S
+  o E
+  o W 
+}
+
+// Define the Asset shipment
+asset Shipment identified by shipmentID {
+  o String shipmentID
+  o AssetType assetType
+  o ShipmentStatus shipmentStatus
+  o Long unitCount
+  --> Contract contract
+  o TemperatureReading[] temperatureReadings optional
+  o AccelerationReading[] accelerationReadings optional
+  o GPSReading[] gpsReadings optional
+} 
+
+// Define the Asset Contract
+asset Contract identified by contractId {
+  o String contractId
+  --> Exporter exporter
+  --> Shipper shipper
+  --> Importer importer
+  o DateTime arrivalDateTime
+  o Double unitPrice
+  o Double minTemperature
+  o Double maxTemperature
+  o Double minPenaltyFactor
+  o Double maxPenaltyFactor
+  o Double maxAcceleration
+}
+
+// Define Event TemperatureThresholdEvent
+event TemperatureThresholdEvent {
+  o Double temperature
+  o String message
+  o String latitude
+  o String longitude
+  o String readingTime
+  --> Shipment shipment
+}
+
+// Define Event AccelerationThresholdEvent
+event AccelerationThresholdEvent {
+  o Double accelerationX
+  o Double accelerationY
+  o Double accelerationZ
+  o String message
+  o String latitude
+  o String longitude
+  o String readingTime
+  --> Shipment shipment
+}
+
+// Define Event ShipmentInPortEvent
+event ShipmentInPortEvent {
+  o String message
+  --> Shipment shipment
+}
+
+// Abstract methos for the ShipmentTransaction
+abstract transaction ShipmentTransaction {
+  --> Shipment  shipment
+}
+
+// Defination of TemperatureReading
+transaction TemperatureReading extends ShipmentTransaction {
+  o Double celsius
+  o String latitude
+  o String longitude
+  o String readingTime
+}
+
+// Defination os AccelerationReading
+transaction AccelerationReading extends ShipmentTransaction {
+  o Double accelerationX
+  o Double accelerationY
+  o Double accelerationZ
+  o String latitude
+  o String longitude
+  o String readingTime
+}
+
+// Defination of GPSReading
+transaction GPSReading extends ShipmentTransaction {
+  o String latitude
+  o CompassDirection latitudeDirection
+  o String longitude
+  o CompassDirection longitudeDirection
+  o String readingTime
+  o String readingDate
+}
+
+// Defination of ShipmentReceived
+transaction ShipmentReceived extends ShipmentTransaction{
+}
+
+// For Testing Purpose
+transaction init {
+}
