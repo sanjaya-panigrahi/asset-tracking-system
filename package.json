@@ -1,7 +1,7 @@
 {
     "name": "composer-asset-tracking-solution",
     "author": "author",
-    "description": "The will use for Asset Tracking Solution. Which is a part of my UpGrad Capstone Project",
+    "description": "POC",
     "version": "0.0.2-deploy.70",
     "devDependencies": {
       "browserfs": "^1.2.0",
